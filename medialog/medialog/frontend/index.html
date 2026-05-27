@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medialog</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css" />
+</head>
+<body>
+
+  <div class="app" id="app">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="logo">
+        <i class="ti ti-stack-2"></i>
+        media<span class="logo-dot">log</span>
+      </div>
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="collection">
+          <i class="ti ti-layout-grid"></i> Coleção
+        </button>
+        <button class="nav-tab" data-tab="stats">
+          <i class="ti ti-chart-bar"></i> Stats
+        </button>
+      </nav>
+      <button class="btn-add" id="btn-open-modal">
+        <i class="ti ti-plus"></i> Adicionar
+      </button>
+    </header>
+
+    <!-- FILTER BAR -->
+    <div class="filterbar">
+      <div class="filter-group">
+        <span class="filter-group-label">Mídia</span>
+        <button class="filter-pill active" data-type="all">
+          <i class="ti ti-layout-grid"></i> Todos
+        </button>
+        <button class="filter-pill" data-type="filme">🎬 Filmes</button>
+        <button class="filter-pill" data-type="jogo">🎮 Jogos</button>
+        <button class="filter-pill" data-type="anime">📺 Animes</button>
+        <button class="filter-pill" data-type="manga">📖 Mangás</button>
+        <button class="filter-pill" data-type="livro">📚 Livros</button>
+        <button class="filter-pill" data-type="desenho">🖼️ Desenhos</button>
+      </div>
+      <div class="filter-divider"></div>
+      <div class="filter-group">
+        <button class="status-pill active" data-status="all">Todos</button>
+        <button class="status-pill" data-status="concluido">
+          <span class="sdot" style="background:#1D9E75;"></span> Concluído
+        </button>
+        <button class="status-pill" data-status="assistindo">
+          <span class="sdot" style="background:#378ADD;"></span> Em andamento
+        </button>
+        <button class="status-pill" data-status="quero">
+          <span class="sdot" style="background:#EF9F27;"></span> Quero ver
+        </button>
+        <button class="status-pill" data-status="abandonado">
+          <span class="sdot" style="background:#E24B4A;"></span> Abandonado
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="content" id="content">
+      <div class="content-header">
+        <div>
+          <span class="content-title" id="content-title">Toda a coleção</span>
+          <span class="content-count" id="content-count"></span>
+        </div>
+        <select class="sort-select" id="sort-select">
+          <option value="recent">Mais recente</option>
+          <option value="rating">Melhor nota</option>
+          <option value="name">Nome A-Z</option>
+        </select>
+      </div>
+      <div class="grid" id="grid"></div>
+    </main>
+
+    <!-- STATS TAB -->
+    <section class="stats-section" id="stats-section" style="display:none;">
+      <div class="stats-grid" id="stats-grid"></div>
+    </section>
+
+  </div>
+
+  <!-- MODAL ADICIONAR/EDITAR -->
+  <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-label="Adicionar à coleção" style="display:none;">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title" id="modal-title">Adicionar à coleção</span>
+        <button class="btn-close" id="btn-close-modal" aria-label="Fechar">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+
+      <form id="item-form" novalidate>
+        <input type="hidden" id="form-id" />
+
+        <label class="field-label">Tipo de mídia</label>
+        <div class="type-grid">
+          <div class="type-option" data-type="filme"><span class="type-icon">🎬</span>Filme</div>
+          <div class="type-option" data-type="jogo"><span class="type-icon">🎮</span>Jogo</div>
+          <div class="type-option" data-type="anime"><span class="type-icon">📺</span>Anime</div>
+          <div class="type-option" data-type="manga"><span class="type-icon">📖</span>Mangá</div>
+          <div class="type-option" data-type="livro"><span class="type-icon">📚</span>Livro</div>
+          <div class="type-option" data-type="desenho"><span class="type-icon">🖼️</span>Desenho</div>
+        </div>
+
+        <label class="field-label" for="form-title">Título</label>
+        <input type="text" id="form-title" placeholder="Nome da obra..." required />
+
+        <label class="field-label" for="form-year">Ano</label>
+        <input type="text" id="form-year" placeholder="Ex: 2024" style="width:110px;" />
+
+        <label class="field-label">Status</label>
+        <div class="status-grid">
+          <div class="status-option" data-status="concluido">
+            <span class="sdot" style="background:#1D9E75;"></span> Concluído
+          </div>
+          <div class="status-option" data-status="assistindo">
+            <span class="sdot" style="background:#378ADD;"></span> Em andamento
+          </div>
+          <div class="status-option" data-status="quero">
+            <span class="sdot" style="background:#EF9F27;"></span> Quero ver
+          </div>
+          <div class="status-option" data-status="abandonado">
+            <span class="sdot" style="background:#E24B4A;"></span> Abandonado
+          </div>
+        </div>
+
+        <label class="field-label">Sua nota</label>
+        <div class="star-rating" id="star-rating" role="radiogroup" aria-label="Nota de 1 a 5">
+          <button type="button" class="star-btn" data-value="1" aria-label="1 estrela">★</button>
+          <button type="button" class="star-btn" data-value="2" aria-label="2 estrelas">★</button>
+          <button type="button" class="star-btn" data-value="3" aria-label="3 estrelas">★</button>
+          <button type="button" class="star-btn" data-value="4" aria-label="4 estrelas">★</button>
+          <button type="button" class="star-btn" data-value="5" aria-label="5 estrelas">★</button>
+        </div>
+
+        <label class="field-label" for="form-comment">Comentário (opcional)</label>
+        <textarea id="form-comment" placeholder="Suas impressões sobre a obra..."></textarea>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" id="btn-cancel-modal">Cancelar</button>
+          <button type="submit" class="btn-save">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DETALHES -->
+  <div class="modal-overlay" id="modal-detail" role="dialog" aria-modal="true" style="display:none;">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title" id="detail-title"></span>
+        <button class="btn-close" id="btn-close-detail" aria-label="Fechar">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+      <div id="detail-body"></div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="btn-delete-item" style="color:#E24B4A; border-color:#F09595;">
+          <i class="ti ti-trash"></i> Remover
+        </button>
+        <button class="btn-save" id="btn-edit-item">
+          <i class="ti ti-edit"></i> Editar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
